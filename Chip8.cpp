@@ -242,6 +242,17 @@ void Chip8::emulateCycle()
         break;
     }
 
+    case 0x8006: {// 8XY6[a]	BitOp	Vx >>= 1	Shifts VX to the right by 1, then stores the least significant bit of VX prior to the shift into VF
+        unsigned char X = (opcode & 0x0F00) >> 8;
+        // unsigned char Y = (opcode & 0x00F0) >> 4; // THIS ISN'T USED BY THE MODERN INTERPRETATION
+
+        V[15] = V[X] & 0x01; // mask for the LSB
+        V[X] >>= 1;
+        pc += 2; 
+
+        break;
+    }
+
     // EXAMPLE OPCODE DECODE //
     case 0xA000: // ANNN: Sets I to the address NNN
         // Execute opcode
