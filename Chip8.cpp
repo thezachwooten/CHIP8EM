@@ -190,8 +190,12 @@ void Chip8::emulateCycle()
     break;
     }
 
-    
+    case 0x8002: { // 8XY2	BitOp	Vx &= Vy	Sets VX to VX and VY. (bitwise AND operation)
+        unsigned char X = (opcode & 0x0F00) >> 8;  // Extract the register index (X)
+        unsigned char Y = (opcode & 0x00F0) >> 4;        // Extract the register index (Y)
 
+        V[X] = V[X] & V[Y]; // & is a bitwise AND
+    }
 
     // EXAMPLE OPCODE DECODE //
     case 0xA000: // ANNN: Sets I to the address NNN
