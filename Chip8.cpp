@@ -196,9 +196,17 @@ void Chip8::emulateCycle()
 
         V[X] = V[X] & V[Y]; // & is a bitwise AND
         pc += 2;
-        
+
     break;
     }
+
+    case 0x8003: { // 8XY3[a]	BitOp	Vx ^= Vy	Sets VX to VX xor VY
+        unsigned char X = (opcode & 0x0F00) >> 8;  // Extract the register index (X)
+        unsigned char Y = (opcode & 0x00F0) >> 4;        // Extract the register index (Y)
+
+        V[X] = V[X] ^= V[Y]; // ^= is a bitwise XOR
+        pc += 2;
+    } 
 
     // EXAMPLE OPCODE DECODE //
     case 0xA000: // ANNN: Sets I to the address NNN
