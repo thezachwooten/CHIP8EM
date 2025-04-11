@@ -195,6 +195,9 @@ void Chip8::emulateCycle()
         unsigned char Y = (opcode & 0x00F0) >> 4;        // Extract the register index (Y)
 
         V[X] = V[X] & V[Y]; // & is a bitwise AND
+        pc += 2;
+        
+    break;
     }
 
     // EXAMPLE OPCODE DECODE //
