@@ -206,7 +206,41 @@ void Chip8::emulateCycle()
 
         V[X] = V[X] ^= V[Y]; // ^= is a bitwise XOR
         pc += 2;
+        
+    break;
     } 
+
+    case 0x8004: { // 8XY4	Math	Vx += Vy	Adds VY to VX. VF is set to 1 when there's an overflow, and to 0 when there is not
+        unsigned char X = (opcode & 0x0F00) >> 8;  // Extract the register index (X)
+        unsigned char Y = (opcode & 0x00F0) >> 4;        // Extract the register index (Y)
+
+        // Check if there will be a carry
+        if (V[Y] > (0xFF - V[X])) {
+            V[0xF] = 1;  // Carry occurred
+        } else {
+            V[0xF] = 0;  // No carry
+        }
+
+        V[X] += V[Y];
+        pc += 2;
+
+    break;
+    }
+
+    case 0x8005: { // 8XY5: Vx = Vx - Vy; VF = NOT borrow
+        unsigned char X = (opcode & 0x0F00) >> 8;
+        unsigned char Y = (opcode & 0x00F0) >> 4;
+    
+        if (V[X] >= V[Y]) {
+            V[0xF] = 1; // No borrow
+        } else {
+            V[0xF] = 0; // Borrow occurred
+        }
+    
+        V[X] -= V[Y];
+        pc += 2;
+        break;
+    }
 
     // EXAMPLE OPCODE DECODE //
     case 0xA000: // ANNN: Sets I to the address NNN
