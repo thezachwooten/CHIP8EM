@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 #include <SDL2/SDL.h> // Graphics and input library
 
 
@@ -307,7 +308,14 @@ void Chip8::emulateCycle()
         break;
     }
 
-    
+    case 0xC000: { // CXNN	Rand	Vx = rand() & NN	Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN
+        unsigned char X = (opcode & 0x0F00) >> 8;
+        unsigned short NN = (opcode & 0x00FF);
+
+
+    }
+
+
     default:
       printf ("Unknown opcode: 0x%X\n", opcode);
   }  
