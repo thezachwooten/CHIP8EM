@@ -269,6 +269,18 @@ void Chip8::emulateCycle()
         break;
     }
 
+    case 0x800E: {// 8XYE[a]	BitOp	Vx <<= 1	Shifts VX to the left by 1, then sets VF to 1 if the most significant bit of VX prior to that shift was set, or to 0 if it was unset.
+        unsigned char X = (opcode & 0x0F00) >> 8;
+        // unsigned char Y = (opcode & 0x00F0) >> 4; // Not needed in modern interpretation
+
+        V[15] = (V[X] & 0x80) >> 7; // Store MSB before shift in VF [0x80 = 0b10000000 for hsb mask]
+        V[X] <<= 1;
+        pc += 2;
+
+        break;
+    }
+
+
     // EXAMPLE OPCODE DECODE //
     case 0xA000: // ANNN: Sets I to the address NNN
         // Execute opcode
