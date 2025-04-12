@@ -280,6 +280,18 @@ void Chip8::emulateCycle()
         break;
     }
 
+    case 0x9000: {// 9XY0	Cond	if (Vx != Vy)	Skips the next instruction if VX does not equal VY. (Usually the next instruction is a jump to skip a code block)
+        unsigned char X = (opcode & 0x0F00) >> 8;
+        unsigned char Y = (opcode & 0x00F0) >> 4;
+
+        // check if VX equals VY
+        if (V[X] != V[Y]) {
+            pc += 4; // skip next instruction
+        } else {
+            pc += 2; // go to next instruction
+        }
+        break;
+    }
 
     // EXAMPLE OPCODE DECODE //
     case 0xA000: // ANNN: Sets I to the address NNN
