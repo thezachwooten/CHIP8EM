@@ -311,8 +311,12 @@ void Chip8::emulateCycle()
     case 0xC000: { // CXNN	Rand	Vx = rand() & NN	Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN
         unsigned char X = (opcode & 0x0F00) >> 8;
         unsigned short NN = (opcode & 0x00FF);
+        unsigned char randByte = rand() % 256;
 
+        V[X] = randByte & NN;
+        pc += 2;
 
+        break;
     }
 
 
