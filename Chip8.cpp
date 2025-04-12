@@ -242,13 +242,29 @@ void Chip8::emulateCycle()
         break;
     }
 
-    case 0x8006: {// 8XY6[a]	BitOp	Vx >>= 1	Shifts VX to the right by 1, then stores the least significant bit of VX prior to the shift into VF
+    case 0x8006: { // 8XY6[a]	BitOp	Vx >>= 1	Shifts VX to the right by 1, then stores the least significant bit of VX prior to the shift into VF
         unsigned char X = (opcode & 0x0F00) >> 8;
         // unsigned char Y = (opcode & 0x00F0) >> 4; // THIS ISN'T USED BY THE MODERN INTERPRETATION
 
         V[15] = V[X] & 0x01; // mask for the LSB
         V[X] >>= 1;
         pc += 2; 
+
+        break;
+    }
+
+    case 0x8007: {// 8XY7[a]	Math	Vx = Vy - Vx	Sets VX to VY minus VX. VF is set to 0 when there's an underflow, and 1 when there is not. (i.e. VF set to 1 if VY >= VX)
+        unsigned char X = (opcode & 0x0F00) >> 8;
+        unsigned char Y = (opcode & 0x00F0) >> 4;
+
+        if (V[Y] >= V[X]) {
+            V[15] = 1;
+        } else {
+            V[15] = 0;
+        }
+
+        V[X] = V[Y] - V[X];
+        pc += 2;
 
         break;
     }
