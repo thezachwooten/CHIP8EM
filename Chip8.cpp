@@ -319,6 +319,36 @@ void Chip8::emulateCycle()
         break;
     }
 
+    case 0xD000: { // DXYN	Display	draw(Vx, Vy, N)
+        unsigned char X = V[(opcode & 0x0F00) >> 8];
+        unsigned char Y = V[(opcode & 0x00F0) >> 4];
+        unsigned char height = opcode & 0x000F;
+
+        V[0xF] = 0; // Reset collision flag
+
+        for (int yLine = 0; yLine < height; yLine++) {
+            unsigned char spriteByte = memory[I + yLine];
+            for (int xLine = 0; xLine < 8; xLine++) {
+                // Check if the bit in the sprite is set
+                if ((spriteByte & (0x80 >> xLine)) != 0) {
+                    int xCoord = (X + xLine) % 64;
+                    int yCoord = (Y + yLine) % 32;
+                    int index = xCoord + (yCoord * 64);
+
+                    // Check if the pixel is already set
+                    if (gfx[index] == 1) {
+                        V[0xF] = 1; // Collision occurred
+                    }
+                    gfx[index] ^= 1; // XOR pixel
+                }
+            }
+        }
+
+        drawFlag = true; // Trigger screen redraw
+        pc += 2;
+        break;
+    }
+
 
     default:
       printf ("Unknown opcode: 0x%X\n", opcode);
