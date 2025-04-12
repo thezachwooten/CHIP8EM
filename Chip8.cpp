@@ -300,8 +300,14 @@ void Chip8::emulateCycle()
         pc += 2;
     break;
  
-    // More opcodes //
- 
+    case 0xB000: {// BNNN	Flow	PC = V0 + NNN	Jumps to the address NNN plus V0
+        unsigned short NNN = (opcode & 0x0FFF);
+
+        pc = V[0] + NNN;
+        break;
+    }
+
+    
     default:
       printf ("Unknown opcode: 0x%X\n", opcode);
   }  
