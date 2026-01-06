@@ -1,5 +1,5 @@
 #include "Chip8.h" // includes the chip
-
+#include <SDL3/SDL.h>
 
 Chip8 myChip8; // declare a new Chip8
 
