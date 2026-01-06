@@ -2,6 +2,7 @@
 
 
 Chip8 myChip8; // declare a new Chip8
+
 int main(int argc, char **argv) {
     // Set up render system and register input callbacks
     // setupGraphics();
